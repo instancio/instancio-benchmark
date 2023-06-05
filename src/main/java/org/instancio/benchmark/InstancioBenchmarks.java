@@ -32,19 +32,24 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-@Measurement(iterations = 5, timeUnit = TimeUnit.MILLISECONDS)
-@Fork(value = 5, warmups = 1)
-@BenchmarkMode(Mode.AverageTime)
+@Measurement(iterations = 3, timeUnit = TimeUnit.MILLISECONDS)
+@Fork(value = 3, warmups = 1)
+@BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
 public class InstancioBenchmarks {
+
+    private static final long SEED = -1L;
+    private static final int LIST_SIZE = 500;
 
     @Benchmark
     public void createCyclic(Blackhole blackhole) {
         final ObjectA result = Instancio.of(ObjectA.class)
                 .withMaxDepth(10)
+                .withSeed(SEED)
                 .create();
 
         blackhole.consume(result);
@@ -52,7 +57,10 @@ public class InstancioBenchmarks {
 
     @Benchmark
     public void createPerson(Blackhole blackhole) {
-        final Person result = Instancio.create(Person.class);
+        final List<Person> result = Instancio.ofList(Person.class)
+                .size(LIST_SIZE)
+                .withSeed(SEED)
+                .create();
 
         blackhole.consume(result);
     }

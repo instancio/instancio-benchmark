@@ -8,7 +8,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <version.instancio>2.9.1-SNAPSHOT</version.instancio>
+        <version.instancio>2.16.1-SNAPSHOT</version.instancio>
         <version.java>1.8</version.java>
         <version.jmh>1.35</version.jmh>
     </properties>
