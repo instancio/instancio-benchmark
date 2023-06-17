@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
 
 @Measurement(iterations = 3, timeUnit = TimeUnit.MILLISECONDS)
 @Fork(value = 3, warmups = 1)
-@BenchmarkMode(Mode.Throughput)
+@BenchmarkMode({Mode.Throughput, Mode.AverageTime})
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
 public class InstancioBenchmarks {
