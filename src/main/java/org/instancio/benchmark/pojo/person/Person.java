@@ -22,7 +22,7 @@ import java.util.UUID;
 public class Person {
     private UUID id;
     private String firstName;
-    private String lsatName;
+    private String lastName;
     private LocalDate dob;
     private List<Address> addresses;
     private List<String> hobbies;
@@ -47,12 +47,12 @@ public class Person {
         this.firstName = firstName;
     }
 
-    public String getLsatName() {
-        return lsatName;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLsatName(final String lsatName) {
-        this.lsatName = lsatName;
+    public void setLastName(final String lastName) {
+        this.lastName = lastName;
     }
 
     public LocalDate getDob() {

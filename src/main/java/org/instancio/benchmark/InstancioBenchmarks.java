@@ -32,8 +32,14 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+
+import static org.instancio.Assign.valueOf;
+import static org.instancio.Select.all;
+import static org.instancio.Select.field;
 
 @Measurement(iterations = 3, timeUnit = TimeUnit.MILLISECONDS)
 @Fork(value = 3, warmups = 1)
@@ -60,6 +66,30 @@ public class InstancioBenchmarks {
         final List<Person> result = Instancio.ofList(Person.class)
                 .size(LIST_SIZE)
                 .withSeed(SEED)
+                .create();
+
+        blackhole.consume(result);
+    }
+
+    @Benchmark
+    public void createWithSelectors(Blackhole blackhole) {
+        final List<Person> result = Instancio.ofList(Person.class)
+                .size(LIST_SIZE)
+                .withSeed(SEED)
+                .ignore(field(Person::getDob))
+                .withNullable(field(Person::getPets))
+                .subtype(field(Person::getHobbies), LinkedList.class)
+                .assign(valueOf(field(Person::getFirstName).atDepth(1)).set("Bart"))
+                .generate(field(Person::getLastName), gen -> gen.oneOf("Simpson"))
+                .set(field(Person::getFirstName).within(field(Person::getMom).toScope()), "Marge")
+                .set(field(Person::getFirstName).within(field(Person::getDad).toScope()), "Homer")
+                .set(all(
+                                field(Person::getLastName).within(field(Person::getMom).toScope()),
+                                field(Person::getLastName).within(field(Person::getDad).toScope())),
+                        "Simpson")
+                .onComplete(all(UUID.class), uuid -> {
+                    // no-op
+                })
                 .create();
 
         blackhole.consume(result);
